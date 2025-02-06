@@ -17,10 +17,10 @@ const intialGameBoard = [
   [null, null, null],
 ];
 function App() {
-  const [player,setplayer]=useState({
-    O:'Player 1',
-    X:'Player 2'
-  })
+  const [player, setplayer] = useState({
+    O: "Player 1",
+    X: "Player 2",
+  });
   const [gameTurn, setGameTurn] = useState([]);
   const activePlayer = deriveActivPlayer(gameTurn);
   //create a new copy from orginal & map is used for create a innerarray copy
@@ -43,7 +43,7 @@ function App() {
       secondSquareSymbol === thirdSquareSymbol &&
       firstSquareSymbol
     ) {
-      winner = firstSquareSymbol;
+      winner = player[firstSquareSymbol];
     }
   }
   const hasDraw = gameTurn.length == 9 && !winner;
@@ -61,12 +61,30 @@ function App() {
   function handleRematch() {
     setGameTurn([]);
   }
+  function handlePlayerNameChange(symbol, newName) {
+    setplayer((prevPlayers) => {
+      return {
+        ...prevPlayers,
+        [symbol]: newName,
+      };
+    });
+  }
   return (
     <main>
       <div id="game-container">
         <ol id="players" className="highlight-player">
-          <Player name="player 1" symbol="O" isActive={activePlayer === "O"} />
-          <Player name="player 2" symbol="X" isActive={activePlayer === "X"} />
+          <Player
+            name="player 1"
+            symbol="O"
+            isActive={activePlayer === "O"}
+            onChangeName={handlePlayerNameChange}
+          />
+          <Player
+            name="player 2"
+            symbol="X"
+            isActive={activePlayer === "X"}
+            onChangeName={handlePlayerNameChange}
+          />
         </ol>
         {(winner || hasDraw) && (
           <GameOver winner={winner} onRestart={handleRematch} />
